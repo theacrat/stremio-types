@@ -1,0 +1,56 @@
+{
+	"name": "stremio-types",
+	"description": "Types generated from stremio-core",
+	"version": "0.52.0",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"devDependencies": {
+		"@eslint/compat": "^2.0.1",
+		"@eslint/js": "^9.39.2",
+		"@trivago/prettier-plugin-sort-imports": "^6.0.2",
+		"@types/bun": "^1.3.6",
+		"@types/node": "^25.0.8",
+		"eslint-config-prettier": "^10.1.8",
+		"husky": "^9.1.7",
+		"jiti": "^2.6.1",
+		"lint-staged": "^16.2.7",
+		"prettier": "^3.8.0",
+		"tsdown": "^0.18.1",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.53.0"
+	},
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.mjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"setup": "bun ./scripts/setup-core.ts",
+		"setup:latest": "bun ./scripts/setup-core.ts --latest",
+		"generate": "bun ./scripts/find-stremio-types && bun ./scripts/process-bindings.ts && bun format .",
+		"prebuild": "bun run generate",
+		"build": "tsdown && bun ./scripts/update-version.ts",
+		"build:ci": "tsdown",
+		"release": "bun run build && bun publish",
+		"lint": "bun eslint",
+		"format": "bun prettier --write --ignore-unknown",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*": [
+			"bun lint",
+			"bun format"
+		]
+	},
+	"type": "module",
+	"types": "./dist/index.d.cts",
+	"repository": {
+		"url": "https://github.com/theacrat/stremio-types"
+	},
+	"license": "MIT"
+}
