@@ -1,1 +1,1 @@
-cd ts && bun lint-staged
+bun lint-staged
