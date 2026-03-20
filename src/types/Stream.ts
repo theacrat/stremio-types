@@ -36,7 +36,7 @@ export type Stream = {
 			fileIdx?: number;
 			fileMustInclude?: Array<string>;
 	  }
-	| { nzbUrl: string; servers?: Array<string> }
+	| { nzbUrl?: string; nzbUrls?: Array<string>; servers: Array<string> }
 	| {
 			infoHash: string;
 			fileIdx?: number;
