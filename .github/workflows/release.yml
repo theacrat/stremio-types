@@ -6,9 +6,15 @@ on:
       - main
     paths:
       - "package.json"
+  workflow_run:
+    workflows:
+      - Sync Upstream
+    types:
+      - completed
 
 jobs:
   check:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     outputs:
       should_release: ${{ steps.check_tag.outputs.should_release }}
@@ -17,6 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
 
       - name: Get package version
         id: version
@@ -63,4 +70,4 @@ jobs:
         run: bun run build:ci
 
       - name: Publish to npm
-        run: npm publish --tag latest
+        run: npm publish --provenance --tag latest

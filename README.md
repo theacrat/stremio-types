@@ -84,6 +84,14 @@ This will:
 3. Build the distribution files
 4. Save any changes as a patch file
 
+## Automation
+
+GitHub Actions can handle upstream syncs and publishing automatically.
+
+- `.github/workflows/sync-upstream.yml` checks for new `stremio-core-web-v*` tags on a schedule or manual dispatch.
+- When a new upstream release exists, it regenerates the types, updates `package.json`, writes the new patch file, and commits the generated changes back to `main`.
+- `.github/workflows/release.yml` handles the tag creation and npm publish step, either from a direct manual version bump or after the sync workflow completes successfully.
+
 # License
 
 See [LICENSE](./LICENCE)

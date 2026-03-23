@@ -1,0 +1,67 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    - cron: "00 0 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync-upstream:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check latest upstream release
+        id: upstream
+        run: bun run check-upstream
+
+      - name: Ensure release tag does not already exist
+        if: steps.upstream.outputs.should_update == 'true'
+        run: |
+          if git rev-parse "${{ steps.upstream.outputs.latest_tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.upstream.outputs.latest_tag }} already exists"
+            exit 1
+          fi
+
+      - name: Prepare latest stremio-core checkout
+        if: steps.upstream.outputs.should_update == 'true'
+        run: bun run setup:latest
+
+      - name: Regenerate types and build package
+        if: steps.upstream.outputs.should_update == 'true'
+        run: bun run build
+
+      - name: Read package version
+        if: steps.upstream.outputs.should_update == 'true'
+        id: package
+        run: echo "version=v$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit generated updates
+        if: steps.upstream.outputs.should_update == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json src patches
+
+          if git diff --cached --quiet; then
+            echo "No generated changes were produced"
+            exit 1
+          fi
+
+          git commit -m "chore: sync stremio-core ${{ steps.package.outputs.version }}"
+          git push origin HEAD:main

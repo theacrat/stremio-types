@@ -29,6 +29,7 @@
 		"prebuild": "bun run generate",
 		"build": "tsdown && bun ./scripts/update-version.ts",
 		"build:ci": "tsdown",
+		"check-upstream": "bun ./scripts/check-upstream-version.ts",
 		"format": "bun prettier --write --ignore-unknown",
 		"generate": "bun ./scripts/find-stremio-types && bun ./scripts/process-bindings.ts && bun format .",
 		"lint": "bun eslint",
