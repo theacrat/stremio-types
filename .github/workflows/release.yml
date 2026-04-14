@@ -69,7 +69,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Setup
-        run: bun run setup:latest
+        run: bun run setup
 
       - name: Build
         run: bun run build
