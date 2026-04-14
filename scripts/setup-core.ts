@@ -62,6 +62,9 @@ console.log(`Patch file: ${patchFile}`);
 console.log(`Resetting to tag ${tag}...`);
 await $`cd ${CLONE_DIR} && git reset --hard ${tag}`;
 
+const cargoLock = resolve(CLONE_DIR, "Cargo.lock");
+await $`rm -f ${cargoLock}`.quiet().nothrow();
+
 console.log(`Applying patch ${patchFile}...`);
 const applyResult = await $`cd ${CLONE_DIR} && git apply ${patchFile}`
 	.quiet()
@@ -85,8 +88,5 @@ if (applyResult.exitCode !== 0) {
 } else {
 	console.log("Patch applied successfully!");
 }
-
-const cargoLock = resolve(CLONE_DIR, "Cargo.lock");
-await $`rm -f ${cargoLock}`.quiet().nothrow();
 
 console.log("Setup complete!");
