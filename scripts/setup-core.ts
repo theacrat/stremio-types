@@ -26,7 +26,7 @@ if (repoExists) {
 	await $`cd ${CLONE_DIR} && git fetch --tags`;
 } else {
 	console.log("Cloning repository with --filter=blob:none...");
-	await $`git clone --filter=blob:none ${REPO_URL} ${CLONE_DIR}`;
+	await $`git clone ${REPO_URL} ${CLONE_DIR}`;
 }
 
 let tag: string;
