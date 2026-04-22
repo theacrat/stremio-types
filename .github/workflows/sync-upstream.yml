@@ -53,6 +53,8 @@ jobs:
 
       - name: Commit generated updates
         if: steps.upstream.outputs.should_update == 'true'
+        env:
+          HUSKY: "0"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
