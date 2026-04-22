@@ -31,7 +31,7 @@
 		"build:ci": "tsdown",
 		"check-upstream": "bun ./scripts/check-upstream-version.ts",
 		"format": "bun prettier --write --ignore-unknown",
-		"generate": "bun ./scripts/find-stremio-types && bun ./scripts/process-bindings.ts && bun format .",
+		"generate": "bun ./scripts/find-stremio-types && bun ./scripts/process-bindings.ts && bun format ./src",
 		"lint": "bun eslint",
 		"prepare": "husky",
 		"release": "bun run build && bun publish",
