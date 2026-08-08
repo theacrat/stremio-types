@@ -1,6 +1,6 @@
 {
 	"name": "stremio-types",
-	"version": "0.60.2",
+	"version": "0.61.0",
 	"description": "Types generated from stremio-core",
 	"repository": {
 		"type": "git",
